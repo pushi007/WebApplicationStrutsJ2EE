@@ -1,0 +1,236 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Registration Form</title>
+   <link rel="stylesheet" type="text/css"  href="<%=request.getContextPath() %>/stylesheets/common.css"/> 
+
+
+<style>
+td
+{
+padding-left: 10px;
+padding-right: 10px;
+padding-top: 5px;
+padding-bottom:5px;
+}
+</style>
+
+<script> 
+// }}}
+// {{{ settings (Editable)
+ 
+var calendarWindow = null;
+var calendarColors = new Array();
+calendarColors['bgColor'] = '#BDC5D0';
+calendarColors['borderColor'] = '#333366';
+calendarColors['headerBgColor'] = '#143464';
+calendarColors['headerColor'] = '#FFFFFF';
+calendarColors['dateBgColor'] = '#8493A8';
+calendarColors['dateColor'] = '#004080';
+calendarColors['dateHoverBgColor'] = '#FFFFFF';
+calendarColors['dateHoverColor'] = '#8493A8';
+var calendarMonths = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+var calendarWeekdays = new Array('S', 'M', 'T', 'W', 'T', 'F', 'S', 'S');
+var calendarUseToday = true;
+var calendarFormat = 'y/m/d';
+var calendarStartMonday = true;
+var calendarScreenX = 100; // either 'auto' or numeric
+var calendarScreenY = 100; // either 'auto' or numeric
+ 
+// }}}
+// {{{ getCalendar()
+ 
+function getCalendar(in_dateField) 
+{
+    if (calendarWindow && !calendarWindow.closed) {
+        alert('Calendar window already open.  Attempting focus...');
+        try {
+            calendarWindow.focus();
+        }
+        catch(e) {}
+        
+        return false;
+    }
+ 
+    var cal_width = 415;
+    var cal_height = 310;
+ 
+    // IE needs less space to make this thing
+    if ((document.all) && (navigator.userAgent.indexOf("Konqueror") == -1)) {
+        cal_width = 410;
+    }
+ 
+    calendarTarget = in_dateField;
+    calendarWindow = window.open('calendar.html', 'dateSelectorPopup','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=0,dependent=no,width='+cal_width+',height='+cal_height + (calendarScreenX != 'auto' ? ',screenX=' + calendarScreenX : '') + (calendarScreenY != 'auto' ? ',screenY=' + calendarScreenY : ''));
+ 
+    return false;
+}
+ 
+// }}}
+// {{{ killCalendar()
+ 
+function killCalendar() 
+{
+    if (calendarWindow && !calendarWindow.closed) 
+    {
+        calendarWindow.close();
+    }
+}
+ 
+// }}}
+ 
+/* function validate()
+{
+	 var fn=document.forms["f1"]["fname"].value;
+	 var ln=document.forms["f1"]["fname"].value;
+	 var dob=document.forms["f1"]["dob"].value;
+	 var dsgn=document.forms["f1"]["designation"].value;
+	 var contact =document.forms["f1"]["contactNo"].value;
+	 if(!(fn || ln || dob || dsgn || contact))
+	 {
+		 alert("Please enter all the mandatory fields marked with *");
+		    return false;
+	 }
+	 
+	 var x=document.forms["f1"]["fname"].value;
+	 if (x==null || x=="")
+	  {
+	    alert("Please enter first name");
+	    return false;
+	  }
+	 if(!(isNaN(x)))
+	  {
+	     alert("Please enter valid first name using alphabets only");
+	  }
+	 var x=document.forms["f1"]["lname"].value;
+	 if (x==null || x=="")
+	  {
+	    alert("Please enter last name");
+	    return false;
+	  }
+	 if(!(isNaN(x)))
+	  {
+	     alert("Please enter valid last name using alphabets only");
+	  }
+}*/
+</script>
+</head>
+<body>
+<jsp:include page="/Layout/Header.jsp"/> 
+<!-- Start Main Content -->
+	<div id="main" class="container">
+	<jsp:include page="/Layout/Menu.jsp"/>
+	<div id="center">
+		<div class="article_wrapper">
+			<p align ="center" style ="font-size:25px ; padding-left:100px">Employee Registration</p><br/>
+		  
+		  
+		  	<form name="f1" action ="/Layout_NB/EmployeeManageServlet" onsubmit="return validate()">
+		  	<input type="hidden" name ="action" value ="EmployeeDetails"/>
+		  	<p align="center"style="color:red;">Fields marked with * are mandatory</p>
+			<table align ="center" style="font-size:15px"; >
+			<tr>
+			
+			<td>First Name<font color="red">*</font></td>
+			
+			<td><input name = "fname" type="text" size="35" onblur="validateFName()"/>
+			</td>
+			</tr>
+			
+			<tr>
+			<td>Last Name<font color="red">*</font></td>
+			
+			<td><input name = "lname" type="text" />
+			</td>
+			</tr>
+			
+			<tr>
+			<td>Date of Birth</td>
+			<td>
+			<input type="text" name="dob" /><a href="#" onclick="return getCalendar(document.f1.dob);"><img src="calendar.png" border="0" /></a> 
+			
+			<!--  <input name = "dob" type="text" />  -->
+		    </td>
+			</tr>
+			
+			<tr>
+			<td>Status</td>
+			<td><input name = "status" type="radio" />Active<br/>
+			<input name = "status" type="radio" />Inactive</td>
+			</tr>
+			
+			<tr>
+			<td>Designation<font color="red">*</font></td>
+			<td><select name="designation">
+			<option>Select Designation</option>
+			<option value="ADMINISTRATOR">Administrator</option>
+			<option value="RELATIONSHIP MANAGER">Relationship Manager</option>
+			<option value="HELPDESK EMPLOYEE">HelpDesk Employee</option>
+			<option value="BACKOFFICE EMPLOYEE">Back Office Employee</option>
+			<option value="COMMERCIAL ACCOUNT OPENER">Commercial Account Opener</option>
+			</select></td>
+			</tr>
+			
+			<tr>
+			<td>Date of Joining</td>
+			<td>
+			<input type="text" name="datejoin" /><a href="#" onclick="return getCalendar(document.f1.datejoin);"><img src="calendar.png" border="0" /></a> 
+				<!--  <input name = "datejoin" type="text" />  -->
+		    </td>
+			</tr>
+			
+			<tr>
+			
+			<td>Address</td>
+			<td><textarea name = "address" rows="3" cols="15" ></textarea>
+			</td>
+			</tr>
+			
+			<tr>
+			<td>Contact Number <font color="red">*</font></td>
+			
+			<td><input name="contactNo" type ="text"></td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>Email Id</td>
+			
+			<td><input name="email" type="text"/></td>
+			
+			</tr>
+		
+			<tr><td>Group</td>
+			<td><input type="checkbox" name="chbox" value="BB_CAO_Common"/>Common<br/>
+			<input type="checkbox" name="chbox" value="BB_CAO_Prod"/>Prod<br/>
+			<input type="checkbox" name="chbox" value="BB_CAO_Main"/>Main<br/>
+			<input type="checkbox" name="chbox" value="BB_CAO_Hdesk"/>HDESK</td>
+			
+			</tr>
+			<tr></tr>
+			<tr></tr>
+			<tr></tr>
+			<tr></tr><tr></tr><tr></tr><tr></tr>
+            <tr>
+			<td></td><td><input id="b1" name="button1" type="submit" value="submit"/>
+						<input id="b2" name="button2" type="reset"/></td>
+			</tr>
+			</table>
+			</form>
+			
+		</div>
+	</div>
+	</div>
+	
+
+
+<jsp:include page="/Layout/Footer.jsp"/>
+
+</body>
+</html>
